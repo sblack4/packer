@@ -1,0 +1,22 @@
+
+---
+- hosts: all
+  become: yes
+  tasks:
+    - name: Get OS name
+      debug:
+        var: ansible_distribution
+    - name: Get OS version
+      debug:
+        var: ansible_distribution_version
+    - name: Group by distro name
+      group_by:
+        key: ansible_distribution_{{ ansible_distribution }}
+    - name: Group by distro version
+      group_by:
+        key: ansible_distribution_version{{ ansible_distribution_version }}
+- hosts: all
+  become: yes
+  roles:
+    - geerlingguy.repo-epel
+    - rhythmic.jetty

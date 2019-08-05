@@ -1,0 +1,5 @@
+---
+- name: geerlinguy.repo-epel
+- name: rhythmic.jetty
+  src: https://github.com/rhythmictech/ansible-role-jetty
+  version: "v0.0.2"
