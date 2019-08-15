@@ -1,0 +1,65 @@
+{
+  "variables": {
+    "version": "v0.0.1",
+    "os_version": "2.0.20190612"
+  },
+  "provisioners": [
+    {
+      "type": "shell",
+      "execute_command": "echo 'vagrant' | {{.Vars}} sudo -S -E bash '{{.Path}}'",
+      "inline": [
+        "echo hello"
+      ]
+    }
+  ],
+  "builders": [
+    {
+      "type": "virtualbox-iso",
+      "boot_command": [
+        "<tab> text ks=http://{{ .HTTPIP }}:{{ .HTTPPort }}/ks.cfg<enter><wait>"
+      ],
+      "boot_wait": "10s",
+      "disk_size": 81920,
+      "guest_os_type": "RedHat_64",
+      "headless": true,
+      "http_directory": "http",
+      "iso_urls": [
+        "Seed.iso",
+        "https://cdn.amazonlinux.com/os-images/2.0.20190612/Seed.iso"
+      ],
+      "iso_checksum_type": "sha256",
+      "iso_checksum": "d69030c237d9241db3fde59b3086c00314d1ccb3c87e38bcfa38a34049deb192",
+      "ssh_username": "vagrant",
+      "ssh_password": "vagrant",
+      "ssh_port": 22,
+      "ssh_wait_timeout": "10000s",
+      "shutdown_command": "echo 'vagrant'|sudo -S /sbin/halt -h -p",
+      "guest_additions_path": "VBoxGuestAdditions_{{.Version}}.iso",
+      "virtualbox_version_file": ".vbox_version",
+      "vm_name": "packer-amazon-linux-2-x86_64",
+      "vboxmanage": [
+        [
+          "modifyvm",
+          "{{.Name}}",
+          "--memory",
+          "512"
+        ],
+        [
+          "modifyvm",
+          "{{.Name}}",
+          "--cpus",
+          "2"
+        ]
+      ]
+    }
+  ],
+  "post-processors": [
+    [
+      {
+        "output": "builds/{{.Provider}}-amazon-linux-2.box",
+        "type": "vagrant"
+
+      }
+    ]
+  ]
+}
